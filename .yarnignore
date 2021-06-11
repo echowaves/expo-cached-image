@@ -1,0 +1,6 @@
+.babelrc
+lib/*test.js
+src/
+.test/
+.eslintrc
+.eslintignore
