@@ -2,7 +2,7 @@ import React, {
   useEffect, useState, useRef,
 } from 'react'
 
-import {Image} from 'react-native-elements'
+import { Image } from 'react-native-elements'
 
 import * as FileSystem from 'expo-file-system'
 
@@ -11,7 +11,7 @@ import PropTypes from 'prop-types'
 import * as CONST from './consts.js'
 
 const CachedImage = props => {
-  const {source: {uri}, cacheKey} = props
+  const { source: { uri }, cacheKey } = props
 
   const fileURI = `${CONST.IMAGE_CACHE_FOLDER}${cacheKey}`
 
@@ -70,4 +70,4 @@ CachedImage.propTypes = {
   cacheKey: PropTypes.string.isRequired,
 }
 
-export default (CachedImage)
+export default CachedImage
