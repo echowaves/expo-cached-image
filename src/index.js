@@ -83,10 +83,9 @@ export const addToCache = async ({ file, key }) => {
     from: file,
     to: `${CONST.IMAGE_CACHE_FOLDER}${key}`,
   })
-}
-export const getContentUri = async ({ key }) => {
-  const uri = await FileSystem.getContentUriAsync(`${CONST.IMAGE_CACHE_FOLDER}${key}`)
-  return uri
+  // const uri = await FileSystem.getContentUriAsync(`${CONST.IMAGE_CACHE_FOLDER}${key}`)
+  // return uri
+  return `${CONST.IMAGE_CACHE_FOLDER}${key}`
 }
 
 export const initCache = async () => {
