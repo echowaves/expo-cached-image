@@ -2,7 +2,10 @@
 Super fast cached image component for react-native applications powered by expo
 
 ## Usage
-
+### Add to project
+```
+yarn add expo-cached-image
+```
 ### CachedImage
 To use `<CachedImage/>` tag, first import it:
 ```JavaScript
