@@ -88,31 +88,14 @@ export const CacheManager = {
     // return uri
     return `${CONST.IMAGE_CACHE_FOLDER}${key}`
   },
-  getContentUri: async ({ key }) => {
+
+  getCachedUri: async ({ key }) => {
     const uri = await FileSystem.getContentUriAsync(`${CONST.IMAGE_CACHE_FOLDER}${key}`)
     return uri
   },
-
-  initCache: async () => {
+  // size in MB, default to 500
+  cleanupCache: async ({ size = 400 } = { size: 400 }) => {
     await _makeSureDirectoryExists({ directory: CONST.IMAGE_CACHE_FOLDER })
-    // alert('cache folder exists')
-
-    // const cachedFiles = await FileSystem.readDirectoryAsync(`${CONST.IMAGE_CACHE_FOLDER}`)
-    //
-    // const cachedUri = `${CONST.IMAGE_CACHE_FOLDER}${cachedFiles[0]}`
-    // console.log({ length: cachedFiles.length })
-    // console.log({ cachedUri })
-    //
-    // for (let i = 0; i < 20000; i += 1) {
-    //   // eslint-disable-next-line no-await-in-loop
-    //   await FileSystem.copyAsync({
-    //     from: cachedUri,
-    //     to: `${cachedUri}_${i}`,
-    //   })
-    // }
-    // console.log('-------------------------------------------DONE-----------------------------------')
-
-    // if (Platform.OS === 'ios') {
     // cleanup old cached files
     const cachedFiles = await FileSystem.readDirectoryAsync(`${CONST.IMAGE_CACHE_FOLDER}`)
 
@@ -139,29 +122,11 @@ export const CacheManager = {
     // let's calculate the sum in the first pass
     // second pass to clean up the cach files based on the total size of files in the cache
     for (let i = 0; i < results.length; i += 1) {
-      if (sumSize > 400 * 1000 * 1000) { // 0.4GB
+      if (sumSize > size * 1000 * 1000) { // 0.4GB
         FileSystem.deleteAsync(`${CONST.IMAGE_CACHE_FOLDER}${results[i].file}`, { idempotent: true })
         sumSize -= results[i].size
       }
     }
-    // alert(`sumSize:${sumSize} cachedFiles:${cachedFiles.length}`)
-
-    // alert(`sorted.length ${sorted.length}`)
-    // second pass to clean up the cach files based on the total number of files in the cache
-
-    // for (let i = 0; (results.length - i) > 1000; i += 1) { // may need to reduce down to 500
-    //   // console.log(sorted[i].modificationTime)
-    //   if (i === 0) {
-    //     alert(`${CONST.IMAGE_CACHE_FOLDER}${results[i].file}`)
-    //   }
-    //   await FileSystem.deleteAsync(`${CONST.IMAGE_CACHE_FOLDER}${results[i].file}`, { idempotent: true }) // eslint-disable-line
-    // }
-
-  // console.log('----------------------------')
-  // console.log({ sumSize })
-  // console.log({ cachedFilesCount })
-  // console.log('----------------------------')
-  // }
   },
 
 }
