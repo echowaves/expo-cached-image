@@ -40,15 +40,15 @@ The *size* is specified in Mb. If the *size* is not specified, the defule value 
 
 If you have a file on local file system which you want to add to cache:
 ```JavaScript
-    photo.getImgUrl = await CacheManager.addToCache({
-      file: `${CONST.PENDING_UPLOADS_FOLDER}${item}`,
-      key: `${photo.id}`,
-    })
+  photo.getImgUrl = await CacheManager.addToCache({
+    file: `${CONST.PENDING_UPLOADS_FOLDER}${item}`,
+    key: `${photo.id}`,
+  })
 ```
 
 If you want to know the *uri* of the cached file by key:
 ```JavaScript
-      const uri = await CacheManager.getCachedUri({ key: `${item.id}` })
+  const uri = await CacheManager.getCachedUri({ key: `${item.id}` })
 ```
 
 
