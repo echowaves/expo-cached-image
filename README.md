@@ -49,7 +49,7 @@ If you have an image on local file system, which you want to add to cache, do th
   })
 ```
 
-If you want to know the local *uri* of the cached file by key:
+To get local *uri* of the cached file by key:
 ```JavaScript
   const uri = await CacheManager.getCachedUri({ key: `${item.id}` })
 ```
