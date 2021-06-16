@@ -4,7 +4,7 @@
   "description": "Super fast cached image component for react-native applications powered by expo",
   "main": "lib/index.js",
   "files": [
-    "lib"
+    "./lib/*"
   ],
   "scripts": {
     "prepublish": "rm -rf ./lib && babel src --out-dir lib && yarn link",
