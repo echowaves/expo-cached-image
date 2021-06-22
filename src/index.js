@@ -86,7 +86,7 @@ export const CacheManager = {
     })
     // const uri = await FileSystem.getContentUriAsync(`${CONST.IMAGE_CACHE_FOLDER}${key}`)
     // return uri
-    const uri = await FileSystem.getContentUriAsync(`${CONST.IMAGE_CACHE_FOLDER}${key}`)
+    const uri = await CacheManager.getCachedUri({ key })
     return uri
   },
 
