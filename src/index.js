@@ -38,8 +38,10 @@ const CachedImage = props => {
             uri,
             fileURI
           )
+          await new Promise(r => setTimeout(r, 100)) // trying to resolve timing issues on android
           if (componentIsMounted.current) {
             await setImgUri(null)
+            await new Promise(r => setTimeout(r, 100)) // trying to resolve timing issues on android
             if (componentIsMounted.current) {
               await setImgUri(fileURI) // deep clone to force re-render
             }
