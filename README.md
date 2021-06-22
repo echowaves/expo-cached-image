@@ -21,11 +21,11 @@ Then it can be referenced in code like this:
         />
 ```        
 
-`<CachedImage/>` internally uses the `<Image/>` component from *'react-native-elements'*, so any properties that apply to the `<Image/>` can be passed into the `<CachedImage/>`. 
+`<CachedImage/>` internally uses the `<Image/>` component from *'react-native-elements'*, so any properties that apply to the `<Image/>` can be passed into the `<CachedImage/>`.
 
-The only property that is `<CachedImage/>` specifc is *cacheKey*. The same *cacheKey* value should be passed always for the same *source* value. This is a little bit of an extra work from application development point of view, but this is how `<CachedImage/>` achieves it's performance. If not for *cacheKey*, the component would have to use some Crypto hash, which adds computational overhead. If you are showing a lot of images in a list on one screen -- this component achieves the best performance.
+*cacheKey* is the only property that's `<CachedImage/>` specific. The same *cacheKey* value should always be passed for the same *source* value. This is a little bit of an extra work from application development point of view, but this is how `<CachedImage/>` achieves it's performance. If not for *cacheKey*, the component would have to use some Crypto hash, which would add computational overhead. If you are rendering lots of images in a list on a screen -- this component will achieve the best performance.
 
-### CacheManager 
+### CacheManager
 
 Import `CacheManager`:
 ```JavaScript
