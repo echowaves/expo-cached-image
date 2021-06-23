@@ -4,6 +4,9 @@ import React, {
 
 import { Image } from 'react-native-elements'
 
+// import {
+//   View,
+// } from 'react-native'
 import * as FileSystem from 'expo-file-system'
 
 import PropTypes from 'prop-types'
@@ -12,16 +15,15 @@ import * as CONST from './consts.js'
 
 const CachedImage = props => {
   const { source: { uri }, cacheKey } = props
-
   const fileURI = `${CONST.IMAGE_CACHE_FOLDER}${cacheKey}`
 
   const [imgUri, setImgUri] = useState(fileURI)
 
   const componentIsMounted = useRef(true)
+  const downloadResumableRef = useRef(FileSystem.createDownloadResumable(uri, fileURI, {}, _callback))
 
   useEffect(() => {
     loadImage()
-
     return () => {
       componentIsMounted.current = false
     }
@@ -34,27 +36,24 @@ const CachedImage = props => {
       if (!metadata.exists) {
         // download to cache
         if (componentIsMounted.current) {
-          await FileSystem.downloadAsync(
-            uri,
-            fileURI
-          )
-          await new Promise(r => setTimeout(r, 100)) // trying to resolve timing issues on android
+          await downloadResumableRef.current.downloadAsync()
           if (componentIsMounted.current) {
-            await setImgUri(null)
-            await new Promise(r => setTimeout(r, 100)) // trying to resolve timing issues on android
-            if (componentIsMounted.current) {
-              await setImgUri(fileURI) // deep clone to force re-render
-            }
+            setImgUri(`${fileURI}?`) // deep clone to force re-render
           }
         }
       }
     } catch (err) {
-      // console.log({ err })
-      if (componentIsMounted.current) {
-        // setImgContents(`data:image/jpeg;base64,`)
-      }
+      console.log({ err })
     }
   }
+
+  const _callback = downloadProgress => {
+    if (componentIsMounted.current === false) {
+      downloadResumableRef.current.pauseAsync()
+    }
+  }
+
+  if (!imgUri) return null
 
   return (
     <Image
