@@ -32,14 +32,14 @@ Import `CacheManager`:
 import { CacheManager } from 'expo-cached-image'
 ```
 
-On a start up of your application, you must cleanup the files from existing cache:
+On a startup of your application, the existing cache should be cleared (this method can be called more often, for instance before taking a photo):
 
 ```JavaScript
   useEffect(() => {
      CacheManager.cleanupCache({ size: 500 })
   }, [])// eslint-disable-line react-hooks/exhaustive-deps
 ```
-The *size* is specified in Mb. If the *size* is not specified, the default value of *400* will be used. Be careful with the *size* parameter -- if it's too big, your device may run out of memory and may crash.
+The *size* parameter defines how much data to keep in the cache. The *size* is specified in Mb. If the *size* is not specified, the default value of *400* will be used. Be careful with the *size* parameter -- if it's too big, your device may run out of memory and may crash.
 
 If you have an image on local file system, which you want to add to cache, do this:
 ```JavaScript
@@ -53,3 +53,10 @@ To get local *uri* of the cached file by key:
 ```JavaScript
   const uri = await CacheManager.getCachedUri({ key: `${item.id}` })
 ```
+
+
+## Sample projects
+https://github.com/echowaves/WiSaw
+https://www.wisaw.com/
+
+
