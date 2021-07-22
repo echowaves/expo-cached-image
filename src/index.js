@@ -127,7 +127,7 @@ export const CacheManager = {
       if (sumSize > size * 1000 * 1000) { // 0.4GB
         await FileSystem.deleteAsync(`${CONST.IMAGE_CACHE_FOLDER}${results[i].file}`, { idempotent: true }) // eslint-disable-line
         sumSize -= results[i].size
-        await new Promise(resolve => setTimeout(resolve, 200)) // eslint-disable-line
+        // await new Promise(resolve => setTimeout(resolve, 200)) // eslint-disable-line
       }
     }
   },
