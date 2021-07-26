@@ -93,6 +93,9 @@ export const CacheManager = {
     const uri = await FileSystem.getContentUriAsync(`${CONST.IMAGE_CACHE_FOLDER}${key}`)
     return uri
   },
+  initCacheFolder: async ({ size = 400 } = { size: 400 }) => {
+    await _makeSureDirectoryExists({ directory: CONST.IMAGE_CACHE_FOLDER })
+  },
   // size in MB, default to 500
   cleanupCache: async ({ size = 400 } = { size: 400 }) => {
     await _makeSureDirectoryExists({ directory: CONST.IMAGE_CACHE_FOLDER })
