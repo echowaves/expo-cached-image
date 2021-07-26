@@ -2,11 +2,9 @@ import React, {
   useEffect, useState, useRef,
 } from 'react'
 
-import { Image } from 'react-native-elements'
-
-// import {
-//   View,
-// } from 'react-native'
+import {
+  Image,
+} from 'react-native'
 import * as FileSystem from 'expo-file-system'
 
 import PropTypes from 'prop-types'
@@ -43,7 +41,7 @@ const CachedImage = props => {
         }
       }
     } catch (err) {
-      console.log({ err })
+      // console.log({ err })
     }
   }
 
@@ -131,7 +129,6 @@ export const CacheManager = {
       }
     }
   },
-
 }
 
 export default CachedImage
