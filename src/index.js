@@ -93,44 +93,8 @@ export const CacheManager = {
     const uri = await FileSystem.getContentUriAsync(`${CONST.IMAGE_CACHE_FOLDER}${key}`)
     return uri
   },
-  initCacheFolder: async ({ size = 400 } = { size: 400 }) => {
+  initCacheFolder: async () => {
     await _makeSureDirectoryExists({ directory: CONST.IMAGE_CACHE_FOLDER })
-  },
-  // size in MB, default to 500
-  cleanupCache: async ({ size = 400 } = { size: 400 }) => {
-    await _makeSureDirectoryExists({ directory: CONST.IMAGE_CACHE_FOLDER })
-    // cleanup old cached files
-    const cachedFiles = await FileSystem.readDirectoryAsync(`${CONST.IMAGE_CACHE_FOLDER}`)
-
-    let position = 0
-    let results = []
-    const batchSize = 20
-
-    // batching promise.all to avoid exxessive promisses call
-    while (position < cachedFiles.length) {
-      const itemsForBatch = cachedFiles.slice(position, position + batchSize)
-        results = [...results, ...await Promise.all(itemsForBatch.map(async file => {// eslint-disable-line
-          const info = await FileSystem.getInfoAsync(`${CONST.IMAGE_CACHE_FOLDER}${file}`)// eslint-disable-line
-        return Promise.resolve({ file, modificationTime: info.modificationTime, size: info.size })
-      }))]
-      position += batchSize
-    }
-
-    // cleanup cache, leave only 500mb wirth of most recent files
-    results
-      .sort((a, b) => a.modificationTime - b.modificationTime)
-
-    let sumSize = results.reduce((accumulator, currentValue) => accumulator + Number(currentValue.size), 0)
-
-    // let's calculate the sum in the first pass
-    // second pass to clean up the cach files based on the total size of files in the cache
-    for (let i = 0; i < results.length; i += 1) {
-      if (sumSize > size * 1000 * 1000) { // 0.4GB
-        await FileSystem.deleteAsync(`${CONST.IMAGE_CACHE_FOLDER}${results[i].file}`, { idempotent: true }) // eslint-disable-line
-        sumSize -= results[i].size
-        // await new Promise(resolve => setTimeout(resolve, 200)) // eslint-disable-line
-      }
-    }
   },
 }
 

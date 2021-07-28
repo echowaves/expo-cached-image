@@ -32,12 +32,12 @@ Import `CacheManager`:
 import { CacheManager } from 'expo-cached-image'
 ```
 
-On a startup of your application, the existing cache should be cleared (this method can be called more often, for instance before taking a photo):
+On a startup of your application, the cache folder should be initialized:
 
 ```JavaScript
   useEffect(() => {
-     CacheManager.cleanupCache({ size: 500 })
-  }, [])// eslint-disable-line react-hooks/exhaustive-deps
+     CacheManager.initCacheFolder()
+  }, [])
 ```
 The *size* parameter defines how much data to keep in the cache. The *size* is specified in Mb. If the *size* is not specified, the default value of *400* will be used. Be careful with the *size* parameter -- if it's too big, your device may run out of memory and may crash.
 
