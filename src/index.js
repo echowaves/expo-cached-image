@@ -93,9 +93,6 @@ export const CacheManager = {
     const uri = await FileSystem.getContentUriAsync(`${CONST.IMAGE_CACHE_FOLDER}${key}`)
     return uri
   },
-  initCacheFolder: async () => {
-    await _makeSureDirectoryExists({ directory: CONST.IMAGE_CACHE_FOLDER })
-  },
 }
 
 export default CachedImage
