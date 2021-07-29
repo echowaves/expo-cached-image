@@ -7,7 +7,6 @@ Super fast cached image component for react-native applications built with expo
 yarn add expo-cached-image
 ```
 ### CachedImage
-Import `<CachedImage/>` tag:
 ```JavaScript
 import CachedImage from 'expo-cached-image'
 ```
@@ -29,8 +28,6 @@ Then it can be referenced in code like this:
 *cacheKey* is the only property that's `<CachedImage/>` specific. The same *cacheKey* value should always be passed for the same *source* value. This is a little bit of an extra work from application development point of view, but this is how `<CachedImage/>` achieves it's performance. If not for *cacheKey*, the component would have to use some Crypto hash, which would add computational overhead. If you are rendering lots of images in a list on a screen -- this component will achieve the best performance.
 
 ### CacheManager
-
-Import `CacheManager`:
 ```JavaScript
 import { CacheManager } from 'expo-cached-image'
 ```
