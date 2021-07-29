@@ -69,14 +69,6 @@ CachedImage.propTypes = {
   cacheKey: PropTypes.string.isRequired,
 }
 
-const _makeSureDirectoryExists = async ({ directory }) => {
-  const tmpDir = await FileSystem.getInfoAsync(directory)
-  // create cacheDir if does not exist
-  if (!tmpDir.exists) {
-    await FileSystem.makeDirectoryAsync(directory)
-  }
-}
-
 export const CacheManager = {
   addToCache: async ({ file, key }) => {
     await FileSystem.copyAsync({

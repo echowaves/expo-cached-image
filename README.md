@@ -17,7 +17,10 @@ Then it can be referenced in code like this:
 <CachedImage
           source={{ uri: `${item.getThumbUrl}` }}
           cacheKey={`${item.id}-thumb`}
-          containerStyle={styles.thumbnail}
+          resizeMode="contain"
+          style={
+            styles.photoContainer
+          }
         />
 ```        
 
@@ -31,15 +34,6 @@ Import `CacheManager`:
 ```JavaScript
 import { CacheManager } from 'expo-cached-image'
 ```
-
-On a startup of your application, the cache folder should be initialized:
-
-```JavaScript
-  useEffect(() => {
-     CacheManager.initCacheFolder()
-  }, [])
-```
-The *size* parameter defines how much data to keep in the cache. The *size* is specified in Mb. If the *size* is not specified, the default value of *400* will be used. Be careful with the *size* parameter -- if it's too big, your device may run out of memory and may crash.
 
 If you have an image on local file system, which you want to add to cache, do this:
 ```JavaScript
