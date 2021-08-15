@@ -6,6 +6,10 @@ Super fast cached image component for react-native applications built with expo
 ```
 yarn add expo-cached-image
 ```
+or
+```
+expo install expo-cached-image
+```
 ### CachedImage
 ```JavaScript
 import CachedImage from 'expo-cached-image'
