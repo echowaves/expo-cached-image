@@ -31,12 +31,16 @@ const CachedImage = props => {
     try {
       // Use the cached image if it exists
       const metadata = await FileSystem.getInfoAsync(fileURI)
-      if (!metadata.exists) {
+      // console.log({metadata})
+      if (!metadata.exists || metadata?.size === 0) {
         // download to cache
         if (componentIsMounted.current) {
-          await downloadResumableRef.current.downloadAsync()
-          if (componentIsMounted.current) {
+          const response = await downloadResumableRef.current.downloadAsync()
+          if (componentIsMounted.current && response.status === 200) {
             setImgUri(`${fileURI}?`) // deep clone to force re-render
+          }
+          if(response.status !== 200) {
+            FileSystem.deleteAsync(fileURI,{idempotent: true} ) // delete file locally if it was not downloaded properly
           }
         }
       }
@@ -48,6 +52,7 @@ const CachedImage = props => {
   const _callback = downloadProgress => {
     if (componentIsMounted.current === false) {
       downloadResumableRef.current.pauseAsync()
+      FileSystem.deleteAsync(fileURI,{idempotent: true} ) // delete file locally if it was not downloaded properly
     }
   }
 
