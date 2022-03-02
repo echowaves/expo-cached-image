@@ -1,13 +1,13 @@
 {
   "name": "expo-cached-image",
-  "version": "44.1.4",
+  "version": "44.1.5",
   "description": "Super fast cached image component for react-native applications powered by expo",
   "main": "lib/index.js",
   "files": [
     "lib"
   ],
   "scripts": {
-    "prepublish": "echo 'prepublishing' && rm -rf ./lib && babel src --out-dir lib && yarn link && cp ./src/expo-cached-image.d.ts ./lib/expo-cached-image.d.ts",
+    "prepublish": "echo 'prepublishing' && rm -rf ./lib && babel src --out-dir lib && yarn link && cp ./src/.d.ts ./lib/.d.ts",
     "test": "rm -rf ./lib && jest"
   },
   "repository": {
