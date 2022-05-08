@@ -12,13 +12,15 @@ import PropTypes from 'prop-types'
 import * as CONST from './consts.js'
 
 const CachedImage = props => {
-  const { source: { uri }, cacheKey } = props
+  const { source, cacheKey } = props
+  const { uri, headers } = source
   const fileURI = `${CONST.IMAGE_CACHE_FOLDER}${cacheKey}`
 
   const [imgUri, setImgUri] = useState(fileURI)
 
   const componentIsMounted = useRef(true)
-  const downloadResumableRef = useRef(FileSystem.createDownloadResumable(uri, fileURI, {}, _callback))
+  const requestOption = headers ? { headers } : {}
+  const downloadResumableRef = useRef(FileSystem.createDownloadResumable(uri, fileURI, requestOption, _callback))
 
   useEffect(() => {
     loadImage()
@@ -63,6 +65,7 @@ const CachedImage = props => {
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
       source={{
+        ...source,
         uri: imgUri,
       }}
     />
