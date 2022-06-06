@@ -18,10 +18,26 @@ import CachedImage from 'expo-cached-image'
 Then it can be referenced in code like this:
 ```JavaScript
 <CachedImage
-          source={{ uri: `${item.getThumbUrl}` }}
-          cacheKey={`${item.id}-thumb`}
-          resizeMode="contain"
-          style={
+          source={{ 
+            uri: `${item.getThumbUrl}`, // (required) -- URI of the image to be cached
+            headers: "Authorization: Bearer mytoken123", // (optional)            
+            expiresIn: 2_628_288, // 1 month in seconds (optional), if not set -- will never expire and will be managed by the OS
+          }}
+          cacheKey={`${item.id}-thumb`} // (required) -- key to store image locally
+          placeholderContent={( // (optional) -- shows while the image is loading
+            <ActivityIndicator // can be any react-native tag
+              color={
+                CONST.MAIN_COLOR
+              }
+              size="small"
+              style={{
+                flex: 1,
+                justifyContent: "center",
+              }}
+            />
+          )} 
+          resizeMode="contain" // pass-through to <Image /> tag 
+          style={              // pass-through to <Image /> tag 
             styles.photoContainer
           }
         />
