@@ -20,7 +20,7 @@ Then it can be referenced in code like this:
 <CachedImage
           source={{ 
             uri: `${item.getThumbUrl}`, // (required) -- URI of the image to be cached
-            headers: "Authorization: Bearer mytoken123", // (optional)            
+            headers: `Authorization: Bearer ${token}`, // (optional)            
             expiresIn: 2_628_288, // 1 month in seconds (optional), if not set -- will never expire and will be managed by the OS
           }}
           cacheKey={`${item.id}-thumb`} // (required) -- key to store image locally
