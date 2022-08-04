@@ -1,5 +1,5 @@
 {
-  "name": "expo-cached-image",
+  "name": "@meecode/expo-cached-image",
   "version": "45.1.1",
   "description": "Super fast cached image component for react-native applications powered by expo",
   "main": "lib/index.js",
