@@ -65,6 +65,12 @@ To get local *uri* of the cached file by key:
   const uri = await CacheManager.getCachedUri({ key: `${item.id}` })
 ```
 
+To pre-populate the cache ahead of time from remote URI:
+```JavaScript
+// this is a convinience wrapper for https://docs.expo.dev/versions/latest/sdk/filesystem/#filesystemdownloadasyncuri-fileuri-options
+  await CacheManager.downloadAsync({uri: `${item.url}`, key: `${item.id}`})
+```
+
 
 ## Sample projects
 https://github.com/echowaves/WiSaw
