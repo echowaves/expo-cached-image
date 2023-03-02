@@ -1,6 +1,6 @@
 {
   "name": "expo-cached-image",
-  "version": "47.1.4",
+  "version": "47.1.5",
   "description": "Super fast cached image component for react-native applications powered by expo",
   "main": "lib/index.js",
   "files": [
