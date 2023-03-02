@@ -1,21 +1,11 @@
 declare module "expo-cached-image" {
-  import {
-    ImageProps,
-    ImageSourcePropType,
-    ImageStyle,
-    StyleProp,
-  } from "react-native"
+  import { ImageProps, ImageSourcePropType } from "react-native"
 
-  export iterface CachedImagesProps {
-    source?: ImageSourcePropType;
-    style: StyleProp<ImageStyle>;
-    cacheKey: string;
-    resizeMode: string;
+  type CachedImageProps = ImageProps & {
+    source?: ImageSourcePropType
+    cacheKey?: string
+    resizeMode: string
   }
 
-  export class CachedImages extends React.Component<
-        CachedImagesProps,
-        any
-    > {}
-
+  export default function (props: CachedImageProps): JSX.Element
 }
