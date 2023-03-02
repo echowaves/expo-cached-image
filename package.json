@@ -7,7 +7,7 @@
     "lib"
   ],
   "scripts": {
-    "prepublish": "echo 'prepublishing' && rm -rf ./lib && babel src --out-dir lib && yarn link && cp ./src/expo-cached-image.d.ts ../lib",
+    "prepublish": "echo 'prepublishing' && rm -rf ./lib && babel src --out-dir lib && yarn link && cp ./src/expo-cached-image.d.ts ./lib",
     "test": "rm -rf ./lib && jest"
   },
   "repository": {
