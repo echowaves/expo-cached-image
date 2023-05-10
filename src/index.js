@@ -59,6 +59,7 @@ const CachedImage = (props) => {
       }
     } catch (err) {
       // console.log({ err })
+      setImgUri(uri)
     }
   }
 
