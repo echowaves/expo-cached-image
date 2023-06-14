@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react"
 
-import { Image } from "react-native"
+import { Image, ImageProps } from "react-native"
 import * as FileSystem from "expo-file-system"
 import { DownloadOptions } from "expo-file-system/src/FileSystem.types";
 
 import * as CONST from "./consts"
 
-type CachedImageProps = {
+type CachedImageProps = Omit<ImageProps, "source"> & {
   cacheKey: string
   source: { uri: string
     headers?: Record<string, string>
@@ -15,7 +15,7 @@ type CachedImageProps = {
 }
 
 const CachedImage = (props: CachedImageProps) => {
-  const { source, cacheKey, placeholderContent } = props
+  const { source, cacheKey, placeholderContent, ...rest } = props
   const { uri, headers, expiresIn } = source
   const fileURI = `${CONST.IMAGE_CACHE_FOLDER}${cacheKey}`
 
@@ -84,7 +84,7 @@ const CachedImage = (props: CachedImageProps) => {
   return (
       <Image
           // eslint-disable-next-line react/jsx-props-no-spreading
-          {...props}
+          {...rest}
           source={{
             ...source,
             uri: imgUri,
