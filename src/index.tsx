@@ -14,7 +14,7 @@ type CachedImageProps = Omit<ImageProps, "source"> & {
   placeholderContent?: React.ReactNode
 }
 
-const CachedImage = (props: CachedImageProps) => {
+const CachedImage: React.FC<CachedImageProps> = (props) => {
   const { source, cacheKey, placeholderContent, ...rest } = props
   const { uri, headers, expiresIn } = source
   const fileURI = `${CONST.IMAGE_CACHE_FOLDER}${cacheKey}`
@@ -79,7 +79,7 @@ const CachedImage = (props: CachedImageProps) => {
   }
 
   // console.log({placeholderContent})
-  if (!imgUri) return placeholderContent || null
+  if (!imgUri) return <>{placeholderContent}</> || null
 
   return (
       <Image

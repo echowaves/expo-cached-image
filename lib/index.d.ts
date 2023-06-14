@@ -11,7 +11,7 @@ type CachedImageProps = Omit<ImageProps, "source"> & {
     };
     placeholderContent?: React.ReactNode;
 };
-declare const CachedImage: (props: CachedImageProps) => string | number | true | Iterable<React.ReactNode> | React.JSX.Element | null;
+declare const CachedImage: React.FC<CachedImageProps>;
 export declare const CacheManager: {
     addToCache: ({ file, key }: {
         file: string;
