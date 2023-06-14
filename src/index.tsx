@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 
-import { Image, ImageProps } from "react-native"
+import { Image, ImageProps, ImageURISource } from "react-native"
 import * as FileSystem from "expo-file-system"
 import { DownloadOptions } from "expo-file-system/src/FileSystem.types";
 
@@ -8,9 +8,7 @@ import * as CONST from "./consts"
 
 type CachedImageProps = Omit<ImageProps, "source"> & {
   cacheKey: string
-  source: { uri: string
-    headers?: Record<string, string>
-    expiresIn?: number }
+  source: Omit<ImageURISource, "uri"> & {uri: string, expiresIn?: number }
   placeholderContent?: React.ReactNode
 }
 
