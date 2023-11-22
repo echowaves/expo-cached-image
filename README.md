@@ -8,7 +8,7 @@ yarn add expo-cached-image
 ```
 or
 ```
-expo install expo-cached-image
+npx expo install expo-cached-image
 ```
 ### CachedImage
 ```JavaScript
