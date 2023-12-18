@@ -19,7 +19,7 @@ export declare const CacheManager: {
     getCachedUri: ({ key }: {
         key: string;
     }) => Promise<string>;
-    downloadAsync: ({ uri, key, options }: {
+    downloadAsync: ({ uri, key, options, }: {
         uri: string;
         key: string;
         options: DownloadOptions;
