@@ -54,7 +54,7 @@
     "expo": "51"
   },
   "peerDependencies": {
-    "react": ">=18.2.0",
-    "react-native": ">=0.74.3"
+    "react": ">=16.8.0",
+    "react-native": ">=0.60.0"
   }
 }

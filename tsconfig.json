@@ -2,12 +2,15 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "jsx": "react-native",
     "outDir": "lib",
     "noEmit": false,
     "declaration": true,
-    "target": "es5",
-    "module": "commonjs",
+    "target": "ES5",
+    "module": "CommonJS",
+    "noImplicitAny": false,
   },
   "include": ["src"],
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
+  
 }

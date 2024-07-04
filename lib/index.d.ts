@@ -1,7 +1,7 @@
-import React from "react";
-import { ImageProps, ImageURISource } from "react-native";
 import * as FileSystem from "expo-file-system";
 import { DownloadOptions } from "expo-file-system/src/FileSystem.types";
+import React from "react";
+import { ImageProps, ImageURISource } from "react-native";
 type CachedImageProps = Omit<ImageProps, "source"> & {
     cacheKey: string;
     source: Omit<ImageURISource, "uri"> & {

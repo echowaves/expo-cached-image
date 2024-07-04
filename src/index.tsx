@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Image, ImageProps, ImageURISource } from "react-native";
-import * as FileSystem from "expo-file-system";
-import { DownloadOptions } from "expo-file-system/src/FileSystem.types";
-import * as CONST from "./consts";
+import * as FileSystem from "expo-file-system"
+import { DownloadOptions } from "expo-file-system/src/FileSystem.types"
+import React, { useEffect, useRef, useState } from "react"
+import { Image, ImageProps, ImageURISource } from "react-native"
+import * as CONST from "./consts"
 
 type CachedImageProps = Omit<ImageProps, "source"> & {
   cacheKey: string
@@ -13,17 +13,26 @@ type CachedImageProps = Omit<ImageProps, "source"> & {
 const CachedImage: React.FC<CachedImageProps> = (props) => {
   const { source, cacheKey, placeholderContent, ...rest } = props
   const { uri, headers, expiresIn } = source
-  const fileURI = `${CONST.IMAGE_CACHE_FOLDER}${cacheKey}`
+  const fileURI = `${CONST.IMAGE_CACHE_FOLDER}${cacheKey}.png`
 
   const [imgUri, setImgUri] = useState<string | null>(fileURI)
 
-  const componentIsMounted = useRef(true)
+  const componentIsMounted = useRef(false)
   const requestOption = headers ? { headers } : undefined
 
-  const _callback = () => {
+  const _callback = async () => {
     if (!componentIsMounted.current) {
-      void downloadResumableRef.current.pauseAsync()
-      void FileSystem.deleteAsync(fileURI, { idempotent: true }) // delete file locally if it was not downloaded properly
+      try {
+       await downloadResumableRef.current.pauseAsync()
+      } catch (werkjsndflv1) {
+        console.error({werkjsndflv1})
+      }      
+      try {
+        await FileSystem.deleteAsync(fileURI, { idempotent: true }) // delete file locally if it was not downloaded properly
+       } catch (werkjsndflv2) {
+         console.error({werkjsndflv2})
+       }      
+ 
     }
   }
 
@@ -32,6 +41,7 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
   )
 
   useEffect(() => {
+    componentIsMounted.current = true;
     void loadImageAsync()
     return () => {
       componentIsMounted.current = false;
@@ -74,7 +84,7 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
   };
 
   if (!imgUri) return placeholderContent || null;
-
+// console.log({imgUri})
   return (
     <Image
       // eslint-disable-next-line react/jsx-props-no-spreading
