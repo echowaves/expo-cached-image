@@ -20,25 +20,25 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
   const componentIsMounted = useRef(false)
   const requestOption = headers ? { headers } : undefined
 
-  const _callback = async () => {
-    if (!componentIsMounted.current) {
-      try {
-       await downloadResumableRef.current.pauseAsync()
-      } catch (werkjsndflv1) {
-        console.error({werkjsndflv1})
-      }      
-      try {
-        await FileSystem.deleteAsync(fileURI, { idempotent: true }) // delete file locally if it was not downloaded properly
-       } catch (werkjsndflv2) {
-         console.error({werkjsndflv2})
-       }      
+  // const _callback = async () => {
+  //   if (!componentIsMounted.current) {
+  //     try {
+  //      await downloadResumableRef.current.pauseAsync()
+  //     } catch (werkjsndflv1) {
+  //       console.error({werkjsndflv1})
+  //     }      
+  //     try {
+  //       await FileSystem.deleteAsync(fileURI, { idempotent: true }) // delete file locally if it was not downloaded properly
+  //      } catch (werkjsndflv2) {
+  //        console.error({werkjsndflv2})
+  //      }      
  
-    }
-  }
+  //   }
+  // }
 
-  const downloadResumableRef = useRef(
-    FileSystem.createDownloadResumable(uri, fileURI, requestOption, _callback),
-  )
+  // const downloadResumableRef = useRef(
+  //   FileSystem.createDownloadResumable(uri, fileURI, requestOption, _callback),
+  // )
 
   useEffect(() => {
     componentIsMounted.current = true;
@@ -60,23 +60,22 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
         );
 
       if (!metadata?.exists || metadata?.size === 0 || expired) {
-        if (componentIsMounted.current) {
-          setImgUri(null);
-
+        await setImgUri(null)
+        if (componentIsMounted.current) {          
           if (expired) {
             await FileSystem.deleteAsync(fileURI, { idempotent: true });
           }
 
           // download to cache
-          const response = await downloadResumableRef.current.downloadAsync();
+          const response = await FileSystem.downloadAsync(uri, fileURI, requestOption)
           if (componentIsMounted.current && response?.status === 200) {
-            setImgUri(`${fileURI}?`); // deep clone to force re-render
+            setImgUri(`${fileURI}`); 
           }
           if (response?.status !== 200) {
             FileSystem.deleteAsync(fileURI, { idempotent: true }); // delete file locally if it was not downloaded properly
           }
         }
-      }
+      } 
     } catch (err) {
       console.error("Error loading image:", err);
       setImgUri(uri);
