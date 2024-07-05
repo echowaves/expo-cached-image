@@ -100,14 +100,14 @@ export const CacheManager = {
   addToCache: async ({ file, key }: { file: string; key: string }) => {
     await FileSystem.copyAsync({
       from: file,
-      to: `${CONST.IMAGE_CACHE_FOLDER}${key}`,
+      to: `${CONST.IMAGE_CACHE_FOLDER}${key}.png`,
     });
     return await CacheManager.getCachedUri({ key });
   },
 
   getCachedUri: async ({ key }: { key: string }) => {
     return await FileSystem.getContentUriAsync(
-      `${CONST.IMAGE_CACHE_FOLDER}${key}`
+      `${CONST.IMAGE_CACHE_FOLDER}${key}.png`
     );
   },
 
@@ -122,7 +122,7 @@ export const CacheManager = {
   }) => {
     return await FileSystem.downloadAsync(
       uri,
-      `${CONST.IMAGE_CACHE_FOLDER}${key}`,
+      `${CONST.IMAGE_CACHE_FOLDER}${key}.png`,
       options
     );
   },
