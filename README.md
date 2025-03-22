@@ -1,78 +1,186 @@
 # expo-cached-image
-Super fast cached image component for react-native applications built with expo
 
-## Usage
-### Add to project
-```
+Super fast and secure cached image component for React Native applications built with Expo.
+
+[![npm version](https://badge.fury.io/js/expo-cached-image.svg)](https://badge.fury.io/js/expo-cached-image)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## Features
+
+- 🚀 Fast image loading with local caching
+- 🔒 Secure file handling and sanitized cache keys
+- ⏱️ Configurable cache expiration
+- 🔄 Automatic cache cleanup
+- 📱 Full TypeScript support
+- 🎨 Customizable placeholder content
+
+## Installation
+
+```bash
+# Using npm
+npm install expo-cached-image
+
+# Using yarn
 yarn add expo-cached-image
-```
-or
-```
+
+# Using expo
 npx expo install expo-cached-image
 ```
-### CachedImage
-```JavaScript
+
+## Basic Usage
+
+```typescript
 import CachedImage from 'expo-cached-image'
+import { ActivityIndicator } from 'react-native'
+
+const MyComponent = () => {
+  return (
+    <CachedImage
+      source={{ 
+        uri: 'https://example.com/image.jpg',
+        headers: { 'Authorization': 'Bearer your-token' }, // Optional
+        expiresIn: 86400, // Optional: Cache expiration in seconds (24 hours)
+      }}
+      cacheKey="unique-image-key" // Required: Unique identifier for the image
+      placeholderContent={( // Optional: Component to show while loading
+        <ActivityIndicator 
+          color="#999999"
+          size="small"
+          style={{ flex: 1, justifyContent: "center" }}
+        />
+      )}
+      style={{ width: 200, height: 200 }}
+      resizeMode="contain"
+    />
+  )
+}
 ```
 
-Then it can be referenced in code like this:
-```JavaScript
-<CachedImage
-          source={{ 
-            uri: `${item.getThumbUrl}`, // (required) -- URI of the image to be cached
-            headers: `Authorization: Bearer ${token}`, // (optional)            
-            expiresIn: 2_628_288, // 1 month in seconds (optional), if not set -- will never expire and will be managed by the OS
-          }}
-          cacheKey={`${item.id}-thumb`} // (required) -- key to store image locally
-          placeholderContent={( // (optional) -- shows while the image is loading
-            <ActivityIndicator // can be any react-native tag
-              color={
-                CONST.MAIN_COLOR
-              }
-              size="small"
-              style={{
-                flex: 1,
-                justifyContent: "center",
-              }}
-            />
-          )} 
-          resizeMode="contain" // pass-through to <Image /> tag 
-          style={              // pass-through to <Image /> tag 
-            styles.photoContainer
-          }
-        />
-```        
+## API Reference
 
-`<CachedImage/>` internally uses the `<Image/>` component from *'react-native'*, so any properties that apply to the `<Image/>` can be passed into the `<CachedImage/>`.
+### CachedImage Component
 
-*cacheKey* is the only property that's `<CachedImage/>` specific. The same *cacheKey* value should always be passed for the same *source* value. This is a little bit of an extra work from application development point of view, but this is how `<CachedImage/>` achieves it's performance. If not for *cacheKey*, the component would have to use some Crypto hash, which would add computational overhead. If you are rendering lots of images in a list on a screen -- this component will achieve the best performance.
+#### Props
 
-### CacheManager
-```JavaScript
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| source | ImageSource | Yes | Image source object containing uri, optional headers and expiration |
+| cacheKey | string | Yes | Unique identifier for caching the image |
+| placeholderContent | ReactNode | No | Component to display while image is loading |
+| ...ImageProps | ImageProps | No | All props from React Native's Image component |
+
+#### ImageSource Properties
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| uri | string | Yes | URL of the image to load and cache |
+| headers | object | No | Request headers for image download |
+| expiresIn | number | No | Cache expiration time in seconds |
+
+### CacheManager API
+
+```typescript
 import { CacheManager } from 'expo-cached-image'
 ```
 
-If you have an image on local file system, which you want to add to cache, do this:
-```JavaScript
-  photo.getImgUrl = await CacheManager.addToCache({
-    file: `${CONST.PENDING_UPLOADS_FOLDER}${item}`,
-    key: `${photo.id}`,
-  })
+#### Methods
+
+##### addToCache
+```typescript
+const uri = await CacheManager.addToCache({
+  file: '/path/to/local/file',
+  key: 'unique-key'
+})
 ```
 
-To get local *uri* of the cached file by key:
-```JavaScript
-  const uri = await CacheManager.getCachedUri({ key: `${item.id}` })
+##### getCachedUri
+```typescript
+const uri = await CacheManager.getCachedUri({
+  key: 'unique-key'
+})
 ```
 
-To pre-populate the cache ahead of time from remote URI:
-```JavaScript
-// this is a convinience wrapper for https://docs.expo.dev/versions/latest/sdk/filesystem/#filesystemdownloadasyncuri-fileuri-options
-  await CacheManager.downloadAsync({uri: `${item.url}`, key: `${item.id}`})
+##### downloadAsync
+```typescript
+const result = await CacheManager.downloadAsync({
+  uri: 'https://example.com/image.jpg',
+  key: 'unique-key',
+  options: {
+    headers: {
+      'Authorization': 'Bearer token'
+    }
+  }
+})
 ```
 
+## Security Considerations
 
-## Sample projects
-https://github.com/echowaves/WiSaw
+1. Always use HTTPS URLs for image sources
+2. Cache keys are automatically sanitized to prevent path traversal and other filesystem-related vulnerabilities
+   - Only alphanumeric characters, dashes, and underscores are allowed
+   - Keys are limited to 100 characters
+   - Leading dashes and periods are replaced with underscores
+3. Implement proper token/credentials management for authenticated requests
+4. Be mindful of storage space when caching large images
+5. Consider implementing cache size limits in your application
 
-https://www.wisaw.com/
+## Best Practices
+
+1. Use meaningful and unique cache keys
+   - Keys will be automatically sanitized, but it's best to use simple alphanumeric identifiers
+   - Example: "user-123-profile-image" or "product_456_thumbnail"
+2. Implement placeholder content for better UX
+3. Set appropriate cache expiration times
+4. Handle errors gracefully
+5. Clean up unused cached images periodically
+
+## Example with Error Handling
+
+```typescript
+const SecureImageComponent = () => {
+  const [error, setError] = useState(false);
+
+  const handleError = () => {
+    setError(true);
+    // Implement your error handling logic
+  };
+
+  return (
+    <CachedImage
+      source={{
+        uri: 'https://secure-site.com/image.jpg',
+        headers: {
+          'Authorization': 'Bearer token',
+          'Accept': 'image/*'
+        },
+        expiresIn: 3600 // 1 hour
+      }}
+      cacheKey="secure-image-1"
+      onError={handleError}
+      placeholderContent={
+        error ? (
+          <ErrorPlaceholder />
+        ) : (
+          <LoadingPlaceholder />
+        )
+      }
+    />
+  );
+};
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Projects Using expo-cached-image
+
+- [WiSaw](https://www.wisaw.com/) - Photo sharing platform
+
+## Support
+
+If you're having any problem, please [raise an issue](https://github.com/echowaves/expo-cached-image/issues/new) on GitHub.
