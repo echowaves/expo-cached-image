@@ -122,7 +122,7 @@ const result = await CacheManager.downloadAsync({
    - Leading dashes and periods are replaced with underscores
 3. Implement proper token/credentials management for authenticated requests
 4. Be mindful of storage space when caching large images
-5. Consider implementing cache size limits in your application
+5. Consider implementing cache size limits in your application (you can find an example here [![Auto Cleanup Script]([https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT](https://codefile.io/f/Ifnl0lirSr)))
 
 ## Best Practices
 
