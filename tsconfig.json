@@ -7,7 +7,7 @@
     "noEmit": false,
     "declaration": true,
     "target": "ES5",
-    "module": "CommonJS",
+    "module": "es2015",
     "noImplicitAny": false,
   },
   "include": ["src"],
