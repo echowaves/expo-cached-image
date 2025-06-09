@@ -179,7 +179,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Projects Using expo-cached-image
 
-- [WiSaw](https://www.wisaw.com/) - Photo sharing platform
+- [github](https://github.com/echowaves/WiSaw) - Photo sharing react-native source code.
+- [WiSaw on the web](https://wisaw.com/) - here is how it looks on the web.
+- [install iOS app](http://itunes.apple.com/us/app/wisaw/id1299949122) 
+- [install Android app](http://play.google.com/store/apps/details?id=com.echowaves.wisaw)
 
 ## Support
 
