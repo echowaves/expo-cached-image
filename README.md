@@ -113,6 +113,24 @@ const result = await CacheManager.downloadAsync({
 })
 ```
 
+##### getMetadata
+```typescript
+const metadata = await CacheManager.getMetadata({
+  key: 'unique-key'
+})
+
+if (metadata) {
+  console.log('File exists:', metadata.exists)
+  console.log('File size:', metadata.size, 'bytes')
+  console.log('Last modified:', metadata.modificationTime)
+  console.log('File path:', metadata.uri)
+} else {
+  console.log('File not found or error occurred')
+}
+```
+
+Returns metadata for a cached item, including file existence, size, modification time, and file path. Returns `null` if the file doesn't exist or an error occurs.
+
 ## Security Considerations
 
 1. Always use HTTPS URLs for image sources
