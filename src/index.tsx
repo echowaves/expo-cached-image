@@ -106,6 +106,30 @@ export const CacheManager = {
       options
     )
   },
+
+  getMetadata: async ({ key }: { key: string }) => {
+    const sanitizedKey = CONST.sanitizeCacheKey(key)
+    const fileURI = `${CONST.IMAGE_CACHE_FOLDER}${sanitizedKey}.png`
+    
+    try {
+      const metadata = await FileSystem.getInfoAsync(fileURI)
+      
+      if (!metadata?.exists) {
+        return null
+      }
+
+      return {
+        exists: metadata.exists,
+        size: metadata.size,
+        modificationTime: new Date(metadata.modificationTime * 1000),
+        uri: fileURI,
+        isDirectory: metadata.isDirectory,
+      }
+    } catch (err) {
+      console.error("Error getting cache metadata:", err)
+      return null
+    }
+  },
 }
 
 export default CachedImage
