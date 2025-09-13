@@ -1,5 +1,5 @@
-import * as FileSystem from "expo-file-system"
-import { DownloadOptions } from "expo-file-system/src/FileSystem.types"
+import * as FileSystem from "expo-file-system/legacy"
+import { DownloadOptions } from "expo-file-system/legacy"
 import React, { useEffect, useRef, useState } from "react"
 import { Image, ImageProps, ImageURISource } from "react-native"
 import * as CONST from "./consts"
