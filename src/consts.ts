@@ -1,6 +1,7 @@
-import * as FileSystem from "expo-file-system/legacy"
+import { Paths } from "expo-file-system"
 
-export const IMAGE_CACHE_FOLDER = `${FileSystem.cacheDirectory}`
+// Directory URI for the cache folder using the new API
+export const IMAGE_CACHE_FOLDER = `${Paths.cache.uri}`
 
 export const sanitizeCacheKey = (key: string): string => {
   // Remove any potentially unsafe characters

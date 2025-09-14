@@ -1,5 +1,3 @@
-import * as FileSystem from "expo-file-system/legacy";
-import { DownloadOptions } from "expo-file-system/legacy";
 import React from "react";
 import { ImageProps, ImageURISource } from "react-native";
 type CachedImageProps = Omit<ImageProps, "source"> & {
@@ -22,8 +20,10 @@ export declare const CacheManager: {
     downloadAsync: ({ uri, key, options, }: {
         uri: string;
         key: string;
-        options: DownloadOptions;
-    }) => Promise<FileSystem.FileSystemDownloadResult>;
+        options: {
+            headers?: Record<string, string>;
+        };
+    }) => Promise<import("expo-file-system/build/ExpoFileSystem.types").File>;
     getMetadata: ({ key }: {
         key: string;
     }) => Promise<{
