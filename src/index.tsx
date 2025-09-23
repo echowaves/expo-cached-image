@@ -61,9 +61,7 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
     }
   }
 
-  if (!imgUri) return placeholderContent || null
-
-  return (
+  if (imgUri)  return (
     <Image
       {...rest}
       source={{
@@ -72,6 +70,9 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
       }}
     />
   )
+
+  return placeholderContent || null
+  
 }
 
 export const CacheManager = {
