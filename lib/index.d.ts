@@ -1,8 +1,8 @@
-import React from "react";
-import { ImageProps, ImageURISource } from "react-native";
-type CachedImageProps = Omit<ImageProps, "source"> & {
+import React from 'react';
+import { ImageProps, ImageURISource } from 'react-native';
+type CachedImageProps = Omit<ImageProps, 'source'> & {
     cacheKey: string;
-    source: Omit<ImageURISource, "uri"> & {
+    source: Omit<ImageURISource, 'uri'> & {
         uri: string;
         expiresIn?: number;
     };
@@ -17,7 +17,7 @@ export declare const CacheManager: {
     getCachedUri: ({ key }: {
         key: string;
     }) => Promise<string>;
-    downloadAsync: ({ uri, key, options, }: {
+    downloadAsync: ({ uri, key, options }: {
         uri: string;
         key: string;
         options: {
