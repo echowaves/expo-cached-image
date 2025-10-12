@@ -2,6 +2,7 @@
 
 Super fast and secure cached image component for React Native applications built with Expo.
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/de3c2435cfa44cc4be13a73eab46a25f)](https://app.codacy.com/gh/echowaves/expo-cached-image?utm_source=github.com&utm_medium=referral&utm_content=echowaves/expo-cached-image&utm_campaign=Badge_Grade)
 [![npm version](https://badge.fury.io/js/expo-cached-image.svg)](https://badge.fury.io/js/expo-cached-image)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
