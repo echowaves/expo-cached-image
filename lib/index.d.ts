@@ -35,3 +35,4 @@ export declare const CacheManager: {
     } | null>;
 };
 export default CachedImage;
+//# sourceMappingURL=index.d.ts.map

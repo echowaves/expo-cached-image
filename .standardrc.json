@@ -1,0 +1,14 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "ignore": [
+    "node_modules/**",
+    "dist/**",
+    ".expo/**",
+    "lib/**",
+    ".codacy/**",
+    "**/*.d.ts"
+  ]
+}
