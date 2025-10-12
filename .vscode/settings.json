@@ -1,6 +1,8 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
-  "eslint.validate": ["javascript"]
+  "standard.engine": "ts-standard",
+  // "editor.formatOnSave": true, // Optional: Enable format on save
+  // "editor.defaultFormatter": "standard.vscode-standard", // Optional: Set as default formatter  
+  // Disable the default TypeScript formatting  
+  // "javascript.format.enable": false,
+  // "typescript.format.enable": false
 }
