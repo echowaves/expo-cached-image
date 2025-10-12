@@ -8,8 +8,13 @@
     "lib"
   ],
   "scripts": {
-    "prepublish": "echo 'prepublishing' && rm -rf ./lib && tsc -p tsconfig.json",
-    "test": "rm -rf ./lib && jest"
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf lib",
+    "prepublishOnly": "npm run clean && npm run build",
+    "test": "jest",
+    "lint": "npx ts-standard",
+    "lint:fix": "npx ts-standard --fix"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,4 @@
-import { Paths } from "expo-file-system"
+import { Paths } from 'expo-file-system'
 
 // Directory URI for the cache folder using the new API
 export const IMAGE_CACHE_FOLDER = `${Paths.cache.uri}`

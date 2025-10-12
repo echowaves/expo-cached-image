@@ -1,15 +1,15 @@
-import { Directory, File } from "expo-file-system"
-import React, { useEffect, useRef, useState } from "react"
-import { Image, ImageProps, ImageURISource } from "react-native"
-import * as CONST from "./consts"
+import { Directory, File } from 'expo-file-system'
+import React, { useEffect, useRef, useState } from 'react'
+import { Image, ImageProps, ImageURISource } from 'react-native'
+import * as CONST from './consts'
 
-type CachedImageProps = Omit<ImageProps, "source"> & {
+type CachedImageProps = Omit<ImageProps, 'source'> & {
   cacheKey: string
-  source: Omit<ImageURISource, "uri"> & { uri: string, expiresIn?: number }
+  source: Omit<ImageURISource, 'uri'> & { uri: string, expiresIn?: number }
   placeholderContent?: React.ReactNode
 }
 
-const CachedImage: React.FC<CachedImageProps> = (props) => {
+const CachedImage: React.FC<CachedImageProps> = async (props) => {
   const { source, cacheKey, placeholderContent, ...rest } = props
   const { uri, headers, expiresIn } = source
   const sanitizedKey = CONST.sanitizeCacheKey(cacheKey)
@@ -19,15 +19,15 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
   const [imgUri, setImgUri] = useState<string | null>(fileURI)
 
   const componentIsMounted = useRef(false)
-  const requestOption = headers ? { headers } : undefined
+  const requestOption = (headers != null) ? { headers } : undefined
 
   useEffect(() => {
-    componentIsMounted.current = true;
+    componentIsMounted.current = true
     void loadImageAsync()
     return () => {
-      componentIsMounted.current = false;
-    };
-  }, []); 
+      componentIsMounted.current = false
+    }
+  }, [])
 
   const loadImageAsync = async () => {
     try {
@@ -40,7 +40,7 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
 
       if (!metadata.exists || (metadata.size ?? 0) === 0 || expired) {
         await setImgUri(null)
-        if (componentIsMounted.current) {          
+        if (componentIsMounted.current) {
           if (expired) {
             file.delete()
           }
@@ -54,43 +54,44 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
             setImgUri(`${fileURI}`)
           }
         }
-      } 
+      }
     } catch (err) {
-      console.error("Error loading image:", err)
+      console.error('Error loading image:', err)
       setImgUri(uri)
     }
   }
 
-  if (imgUri)  return (
-    <Image
-      {...rest}
-      source={{
-        ...source,
-        uri: imgUri,
-      }}
-    />
-  )
+  if (imgUri) {
+    return (
+      <Image
+        {...rest}
+        source={{
+          ...source,
+          uri: imgUri
+        }}
+      />
+    )
+  }
 
-  return placeholderContent || null
-  
+  return await (placeholderContent || null)
 }
 
 export const CacheManager = {
-  addToCache: async ({ file, key }: { file: string; key: string }) => {
+  addToCache: async ({ file, key }: { file: string, key: string }) => {
     const sanitizedKey = CONST.sanitizeCacheKey(key)
-  new File(file).copy(new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`))
+    new File(file).copy(new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`))
     return await CacheManager.getCachedUri({ key })
   },
 
   getCachedUri: async ({ key }: { key: string }) => {
     const sanitizedKey = CONST.sanitizeCacheKey(key)
-  return new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`).uri
+    return new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`).uri
   },
 
   downloadAsync: async ({
     uri,
     key,
-    options,
+    options
   }: {
     uri: string
     key: string
@@ -113,10 +114,10 @@ export const CacheManager = {
     const sanitizedKey = CONST.sanitizeCacheKey(key)
     const fileRef = new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`)
     const fileURI = fileRef.uri
-    
+
     try {
       const metadata = fileRef.info()
-      
+
       if (!metadata.exists) {
         return null
       }
@@ -126,13 +127,13 @@ export const CacheManager = {
         size: metadata.size ?? 0,
         modificationTime: new Date(metadata.modificationTime ?? 0),
         uri: fileURI,
-        isDirectory: false,
+        isDirectory: false
       }
     } catch (err) {
-      console.error("Error getting cache metadata:", err)
+      console.error('Error getting cache metadata:', err)
       return null
     }
-  },
+  }
 }
 
 export default CachedImage
