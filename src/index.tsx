@@ -9,7 +9,7 @@ type CachedImageProps = Omit<ImageProps, 'source'> & {
   placeholderContent?: React.ReactNode
 }
 
-const CachedImage: React.FC<CachedImageProps> = (props) => {
+const CachedImage: React.FC<CachedImageProps> = async (props) => {
   const { source, cacheKey, placeholderContent, ...rest } = props
   const { uri, headers, expiresIn } = source
   const sanitizedKey = CONST.sanitizeCacheKey(cacheKey)
@@ -73,7 +73,7 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
     )
   }
 
-  return placeholderContent ?? null
+  return await (placeholderContent ?? null)
 }
 
 export const CacheManager = {
