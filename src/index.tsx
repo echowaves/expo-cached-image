@@ -29,30 +29,44 @@ const CachedImage: React.FC<CachedImageProps> = async (props) => {
     }
   }, [])
 
-  const loadImageAsync = async () => {
+  const isFileExpired = (metadata: ReturnType<typeof file.info>): boolean => {
+    return Boolean(
+      metadata.exists &&
+        expiresIn != null &&
+        expiresIn > 0 &&
+        (Date.now() - (metadata.modificationTime ?? 0)) / 1000 > expiresIn
+    )
+  }
+
+  const shouldRedownload = (metadata: ReturnType<typeof file.info>, expired: boolean): boolean => {
+    return !metadata.exists || (metadata.size ?? 0) === 0 || expired
+  }
+
+  const downloadAndMoveFile = async (): Promise<void> => {
+    const downloaded = await File.downloadFileAsync(uri, new Directory(CONST.IMAGE_CACHE_FOLDER), requestOption)
+    // Move/rename if the server selected a different filename
+    if (downloaded.uri !== fileURI) {
+      new File(downloaded.uri).move(file)
+    }
+  }
+
+  const loadImageAsync = async (): Promise<void> => {
     try {
       const metadata = file.info()
-      const expired = Boolean(
-        metadata.exists &&
-          expiresIn &&
-          (Date.now() - (metadata.modificationTime ?? 0)) / 1000 > expiresIn
-      )
+      const expired = isFileExpired(metadata)
 
-      if (!metadata.exists || (metadata.size ?? 0) === 0 || expired) {
+      if (shouldRedownload(metadata, expired)) {
         await setImgUri(null)
-        if (componentIsMounted.current) {
-          if (expired) {
-            file.delete()
-          }
+        if (!componentIsMounted.current) return
 
-          const downloaded = await File.downloadFileAsync(uri, new Directory(CONST.IMAGE_CACHE_FOLDER), requestOption)
-          // Move/rename if the server selected a different filename
-          if (downloaded.uri !== fileURI) {
-            new File(downloaded.uri).move(file)
-          }
-          if (componentIsMounted.current) {
-            setImgUri(`${fileURI}`)
-          }
+        if (expired) {
+          file.delete()
+        }
+
+        await downloadAndMoveFile()
+
+        if (componentIsMounted.current) {
+          setImgUri(`${fileURI}`)
         }
       }
     } catch (err) {
@@ -61,7 +75,7 @@ const CachedImage: React.FC<CachedImageProps> = async (props) => {
     }
   }
 
-  if (imgUri) {
+  if (imgUri !== null && imgUri !== '') {
     return (
       <Image
         {...rest}
