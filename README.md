@@ -205,3 +205,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 If you're having any problem, please [raise an issue](https://github.com/echowaves/expo-cached-image/issues/new) on GitHub.
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2e0922f40d6d4b99b5d1aebe4e9f8601)](https://app.codacy.com/gh/echowaves/expo-cached-image/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
