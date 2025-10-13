@@ -9,7 +9,7 @@ type CachedImageProps = Omit<ImageProps, 'source'> & {
   placeholderContent?: React.ReactNode
 }
 
-const CachedImage: React.FC<CachedImageProps> = async (props) => {
+const CachedImage: React.FC<CachedImageProps> = (props) => {
   const { source, cacheKey, placeholderContent, ...rest } = props
   const { uri, headers, expiresIn } = source
   const sanitizedKey = CONST.sanitizeCacheKey(cacheKey)
@@ -29,17 +29,28 @@ const CachedImage: React.FC<CachedImageProps> = async (props) => {
     }
   }, [])
 
+  const calculateFileAge = (modificationTime: number): number => {
+    return (Date.now() - modificationTime) / 1000
+  }
+
+  const hasExpiryConfig = (): boolean => {
+    return expiresIn != null && expiresIn > 0
+  }
+
   const isFileExpired = (metadata: ReturnType<typeof file.info>): boolean => {
-    return Boolean(
-      metadata.exists &&
-        expiresIn != null &&
-        expiresIn > 0 &&
-        (Date.now() - (metadata.modificationTime ?? 0)) / 1000 > expiresIn
-    )
+    if (!metadata.exists || !hasExpiryConfig()) {
+      return false
+    }
+    const fileAge = calculateFileAge(metadata.modificationTime ?? 0)
+    return fileAge > (expiresIn ?? 0)
+  }
+
+  const isFileInvalid = (metadata: ReturnType<typeof file.info>): boolean => {
+    return !metadata.exists || (metadata.size ?? 0) === 0
   }
 
   const shouldRedownload = (metadata: ReturnType<typeof file.info>, expired: boolean): boolean => {
-    return !metadata.exists || (metadata.size ?? 0) === 0 || expired
+    return isFileInvalid(metadata) || expired
   }
 
   const downloadAndMoveFile = async (): Promise<void> => {
@@ -50,28 +61,54 @@ const CachedImage: React.FC<CachedImageProps> = async (props) => {
     }
   }
 
+  const deleteExpiredFile = (): void => {
+    file.delete()
+  }
+
+  const updateImageUri = (newUri: string | null): void => {
+    if (componentIsMounted.current) {
+      setImgUri(newUri)
+    }
+  }
+
+  const handleCachedImageLoad = async (): Promise<void> => {
+    await setImgUri(null)
+    if (!componentIsMounted.current) return
+
+    await downloadAndMoveFile()
+    updateImageUri(`${fileURI}`)
+  }
+
+  const handleExpiredImageLoad = async (): Promise<void> => {
+    await setImgUri(null)
+    if (!componentIsMounted.current) return
+
+    deleteExpiredFile()
+    await downloadAndMoveFile()
+    updateImageUri(`${fileURI}`)
+  }
+
+  const handleImageLoadError = (err: unknown): void => {
+    console.error('Error loading image:', err)
+    setImgUri(uri)
+  }
+
   const loadImageAsync = async (): Promise<void> => {
     try {
       const metadata = file.info()
       const expired = isFileExpired(metadata)
 
-      if (shouldRedownload(metadata, expired)) {
-        await setImgUri(null)
-        if (!componentIsMounted.current) return
+      if (!shouldRedownload(metadata, expired)) {
+        return
+      }
 
-        if (expired) {
-          file.delete()
-        }
-
-        await downloadAndMoveFile()
-
-        if (componentIsMounted.current) {
-          setImgUri(`${fileURI}`)
-        }
+      if (expired) {
+        await handleExpiredImageLoad()
+      } else {
+        await handleCachedImageLoad()
       }
     } catch (err) {
-      console.error('Error loading image:', err)
-      setImgUri(uri)
+      handleImageLoadError(err)
     }
   }
 
@@ -87,7 +124,7 @@ const CachedImage: React.FC<CachedImageProps> = async (props) => {
     )
   }
 
-  return await (placeholderContent ?? null)
+  return <>{placeholderContent ?? null}</>
 }
 
 export const CacheManager = {
