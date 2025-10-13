@@ -51,9 +51,9 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "expo": ">=50.0.0 <100.0.0",
-    "expo-file-system": ">=17.0.0 <100.0.0",
-    "react": ">=16.8.0 <100.0.0",
+    "expo": ">=50.0.0 <55.0.0",
+    "expo-file-system": ">=17.0.0 <20.0.0",
+    "react": ">=16.8.0 <20.0.0",
     "react-native": ">=0.60.0 <1.0.0"
   }
 }
