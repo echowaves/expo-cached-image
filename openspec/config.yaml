@@ -1,20 +1,23 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Project: expo-cached-image
+  Description: Super fast cached image component for React Native applications powered by Expo
+  Tech stack: TypeScript, React Native, Expo
+  Key dependencies: expo-file-system (for caching), React, React Native
+  Peer dependency ranges: Expo 50-54, React 16.8-19, React Native 0.60-0.82
+  Build: tsc (TypeScript compiler)
+  Linting: ts-standard
+  Testing: Jest
+  Package output: lib/ directory (compiled JS + type declarations)
+  Source: src/ directory (index.tsx, consts.ts)
+  License: MIT
+  Repository: github.com/echowaves/expo-cached-image
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+rules:
+  proposal:
+    - Keep proposals concise and focused on the image caching domain
+    - Consider backward compatibility with supported Expo/React Native versions
+  tasks:
+    - Each task should be small and independently testable
+    - Consider impact on the public API (CachedImage component props)
