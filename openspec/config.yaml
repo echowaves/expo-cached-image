@@ -13,6 +13,8 @@ context: |
   Source: src/ directory (index.tsx, consts.ts)
   License: MIT
   Repository: github.com/echowaves/expo-cached-image
+  Dependencies: Always use exact versions in package.json (no ^ or ~ prefixes)
+  Package manager: npm
 
 rules:
   proposal:
