@@ -5,7 +5,7 @@ context: |
   Description: Super fast cached image component for React Native applications powered by Expo
   Tech stack: TypeScript, React Native, Expo
   Key dependencies: expo-file-system (for caching), React, React Native
-  Peer dependency ranges: Expo 50-54, React 16.8-19, React Native 0.60-0.82
+  Peer dependency ranges: Expo 51-55, React 16.8-19, React Native 0.60-0.83
   Build: tsc (TypeScript compiler)
   Linting: ts-standard
   Testing: Jest
