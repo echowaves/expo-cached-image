@@ -23,3 +23,6 @@ rules:
   tasks:
     - Each task should be small and independently testable
     - Consider impact on the public API (CachedImage component props)
+    - When adding or updating dependencies, always use exact versions (e.g., "1.2.3" not "^1.2.3" or "~1.2.3"). Use --save-exact with npm install.
+  dependencies:
+    - Do not add any new dependencies to the project unless the user explicitly requests or approves it. Solve problems using existing dependencies and built-in APIs first.
