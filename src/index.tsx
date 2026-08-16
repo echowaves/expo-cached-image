@@ -57,7 +57,7 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
     const downloaded = await File.downloadFileAsync(uri, new Directory(CONST.IMAGE_CACHE_FOLDER), requestOption)
     // Move/rename if the server selected a different filename
     if (downloaded.uri !== fileURI) {
-      new File(downloaded.uri).move(file)
+      await new File(downloaded.uri).move(file)
     }
   }
 
@@ -130,7 +130,7 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
 export const CacheManager = {
   addToCache: async ({ file, key }: { file: string, key: string }) => {
     const sanitizedKey = CONST.sanitizeCacheKey(key)
-    new File(file).copy(new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`))
+    await new File(file).copy(new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`))
     return await CacheManager.getCachedUri({ key })
   },
 
@@ -156,7 +156,7 @@ export const CacheManager = {
     )
     const target = new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`)
     if (result.uri !== target.uri) {
-      new File(result.uri).move(target)
+      await new File(result.uri).move(target)
     }
     return result
   },
