@@ -7,7 +7,7 @@ compatibility: Requires openspec CLI.
 metadata:
   author: openspec
   version: "1.0"
-  generatedBy: "1.9.0"
+  generatedBy: "1.13.0"
 ---
 
 Guide the user through their first complete OpenSpec workflow cycle. This is a teaching experience—you'll do real work in their codebase while explaining each step.
@@ -374,12 +374,12 @@ Here are the implementation tasks:
 
 ## 1. [Category or file]
 
-- [ ] 1.1 [Specific task]
-- [ ] 1.2 [Specific task]
+- [ ] 1.1 [Specific task] — verify: [test, command, observable behavior, or delivered artifact]
+- [ ] 1.2 [Specific task] — verify: [test, command, observable behavior, or delivered artifact]
 
-## 2. Verify
+## 2. Integration Verification
 
-- [ ] 2.1 [Verification step]
+- [ ] 2.1 Verify [broader integration or system behavior] with [end-to-end test or observable result]
 
 ---
 
