@@ -23,7 +23,7 @@ Cached image component for React Native: downloads a remote image into the Expo 
 
 ## Conventions that differ from defaults
 
-- The package `version` tracks the Expo SDK major it targets (`57.0.0` ↔ Expo 57).
+- The package `version` tracks the Expo SDK major it targets (`58.0.0` ↔ Expo 58).
 - Supporting a new Expo major means bumping devDependencies, the `expo`/`expo-file-system` peer window, and the package version together; consumers on dropped SDK majors stay on the older release line.
 
 <!-- /bmad:context -->
