@@ -1,0 +1,57 @@
+{
+  "generation_hash": "e7293e907f3efcb66183",
+  "inputs": {
+    "jinja2_version": "3.1.6",
+    "project_root": "/Users/dmitry/hacks/wisaw/expo-cached-image",
+    "renderer_sha256": "82b4d567c335a596d086d94b4772d0a4a9e09065f84b45c3647276593d02552c",
+    "resolved_values": {
+      "config.core.output_folder": "/Users/dmitry/hacks/wisaw/expo-cached-image/_bmad-output",
+      "customization.workflow.activation_steps_append": [],
+      "customization.workflow.activation_steps_prepend": [],
+      "customization.workflow.on_complete": "",
+      "customization.workflow.open_plan": "",
+      "customization.workflow.persistent_facts": [],
+      "customization.workflow.quick_lenses": [
+        {
+          "id": "quick",
+          "instruction": "Launch a context-free subagent with this prompt:\n\nRead `{plan_file}` — the plan holding the acceptance criteria and intent — and the files its frontmatter `context:` lists. Read the agent instruction files (`AGENTS.md`, `CLAUDE.md`, or equivalents) at the repository root and in the directories the diff touches; those are the rules. Then read the unified diff at `{diff_file}` — it is the change under review.\n\nReport unmet acceptance criteria, broken rules, and bugs. Each finding: the location, what goes wrong, and evidence checked against the surrounding code. Output a Markdown list of findings only — no severity, priority, or ranking.\n\nReview by inspection only. Do not modify code, run builds or tests, or invoke quality gates. Do not invoke any skill, and do not spawn subagents of your own — you are the reviewer. Return your findings as text in your final message; do not route them through any findings-reporting tool the host may offer.\n\n",
+          "name": "Quick"
+        }
+      ],
+      "customization.workflow.review": "quick",
+      "customization.workflow.route": "oneshot",
+      "initiative_folder": "/Users/dmitry/hacks/wisaw/expo-cached-image/_bmad-output"
+    },
+    "skill_root": "/Users/dmitry/hacks/wisaw/expo-cached-image/.agents/skills/bmad-build",
+    "source_sha256": {
+      "plan-template.md": "d8b2b886839573c30b5cab5fc256fd8a3050ddb9ab64117b5651dce2406e2077",
+      "references/claims-check.md": "6cb20a86d819b95272876bca0dffef59ca07ba6a373d804295066751043867c0",
+      "references/deletion-check.md": "0f1f124e4e957147e89164a272b10bedc694ad0d9ad2618c8610ac74ee9cb0da",
+      "review-prompts/edge-case-hunter.md": "b909fe0ec8e4daaf2550d0ec783618c5146261d0dbc0e054698ce00d0905a3d1",
+      "review-prompts/verification-gap.md": "859930110817293bf9d25bd6df093f094cdc50fe6b8359e3720aee6dba96e17a",
+      "step-01-clarify-and-route.md": "abf395fb9cb3fd07c635622522bb1f6d59041eabd0dc7be79078cb759aef11da",
+      "step-02-plan.md": "44a0242450a0f316756d0f9abc6dbde6473e5f05742c9d97cf12531679693991",
+      "step-03-implement.md": "df1a0f8a8fdb524581d371505a12a33a25d5150ecb442a58a9d8145d2b284954",
+      "step-04-review.md": "5e2e3b5bd166bf8fa835a21ba27b147cf4c6373fbf2b712a4c251968f3805169",
+      "step-05-present.md": "8c3a4f5e627524b05c3f1db4850b6ab68ae6930d8046c340a3e1590dccc4ed61",
+      "step-oneshot.md": "1313ccda88e42fc813ed585bd2f3794480c33cb40dea674cb45ca860310dbf9e",
+      "workflow.md": "a4a1fed8a1d374b5ff8ac5613211a2e31d7e89743d1b153348ae6fe9ce36ec80"
+    }
+  },
+  "outputs": {
+    "plan-template.md": "d8b2b886839573c30b5cab5fc256fd8a3050ddb9ab64117b5651dce2406e2077",
+    "references/claims-check.md": "6cb20a86d819b95272876bca0dffef59ca07ba6a373d804295066751043867c0",
+    "references/deletion-check.md": "0f1f124e4e957147e89164a272b10bedc694ad0d9ad2618c8610ac74ee9cb0da",
+    "review-prompts/edge-case-hunter.md": "b909fe0ec8e4daaf2550d0ec783618c5146261d0dbc0e054698ce00d0905a3d1",
+    "review-prompts/verification-gap.md": "859930110817293bf9d25bd6df093f094cdc50fe6b8359e3720aee6dba96e17a",
+    "step-01-clarify-and-route.md": "4f011212db890789d13241a39b3af418f715b3b30c041bbf0f480028f24b4b2c",
+    "step-02-plan.md": "a556ab35fa9bf27ed56be0214530f91481397d0185bf84fd7b10ffc68a539dea",
+    "step-oneshot.md": "baacf30b5155be9cbb5cbb84bb2a8c503967d251cd7ef133003343aaf8716d07",
+    "workflow.md": "daf19c6ad033b7fd6f2d2bc8524bdf3cfde0dea8366b273dd44c1dccd959fc0e"
+  },
+  "project_root": "/Users/dmitry/hacks/wisaw/expo-cached-image",
+  "project_slug": "expo-cached-image",
+  "root_hash": "899994b2c732",
+  "schema_version": 1,
+  "skill": "bmad-build"
+}

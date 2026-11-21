@@ -113,6 +113,9 @@ const result = await CacheManager.downloadAsync({
 })
 ```
 
+Downloads the image and resolves with the cached `File` for `key`. Any existing entry for
+that key is replaced, and concurrent calls for the same key share a single download.
+
 ##### getMetadata
 ```typescript
 const metadata = await CacheManager.getMetadata({

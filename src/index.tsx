@@ -1,7 +1,6 @@
-import { Directory, File } from 'expo-file-system'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, ImageProps, ImageURISource } from 'react-native'
-import * as CONST from './consts'
+import { CacheManager, cacheFileFor, loadIntoCache } from './cache'
 
 type CachedImageProps = Omit<ImageProps, 'source'> & {
   cacheKey: string
@@ -12,14 +11,12 @@ type CachedImageProps = Omit<ImageProps, 'source'> & {
 const CachedImage: React.FC<CachedImageProps> = (props) => {
   const { source, cacheKey, placeholderContent, ...rest } = props
   const { uri, headers, expiresIn } = source
-  const sanitizedKey = CONST.sanitizeCacheKey(cacheKey)
-  const file = new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`)
+  const file = cacheFileFor(cacheKey)
   const fileURI = file.uri
 
   const [imgUri, setImgUri] = useState<string | null>(fileURI)
 
   const componentIsMounted = useRef(false)
-  const requestOption = (headers != null) ? { headers } : undefined
 
   useEffect(() => {
     componentIsMounted.current = true
@@ -53,39 +50,20 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
     return isFileInvalid(metadata) || expired
   }
 
-  const downloadAndMoveFile = async (): Promise<void> => {
-    const downloaded = await File.downloadFileAsync(uri, new Directory(CONST.IMAGE_CACHE_FOLDER), requestOption)
-    // Move/rename if the server selected a different filename
-    if (downloaded.uri !== fileURI) {
-      await new File(downloaded.uri).move(file)
-    }
-  }
-
-  const deleteExpiredFile = (): void => {
-    file.delete()
-  }
-
   const updateImageUri = (newUri: string | null): void => {
     if (componentIsMounted.current) {
       setImgUri(newUri)
     }
   }
 
-  const handleCachedImageLoad = async (): Promise<void> => {
-    await setImgUri(null)
+  // Shared by the missing/invalid and the expired paths: loadIntoCache clears a stale
+  // target itself, and dedupes with any other component that wants the same key.
+  const handleRedownload = async (): Promise<void> => {
+    setImgUri(null)
     if (!componentIsMounted.current) return
 
-    await downloadAndMoveFile()
-    updateImageUri(`${fileURI}`)
-  }
-
-  const handleExpiredImageLoad = async (): Promise<void> => {
-    await setImgUri(null)
-    if (!componentIsMounted.current) return
-
-    deleteExpiredFile()
-    await downloadAndMoveFile()
-    updateImageUri(`${fileURI}`)
+    await loadIntoCache({ uri, key: cacheKey, headers })
+    updateImageUri(fileURI)
   }
 
   const handleImageLoadError = (err: unknown): void => {
@@ -102,11 +80,7 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
         return
       }
 
-      if (expired) {
-        await handleExpiredImageLoad()
-      } else {
-        await handleCachedImageLoad()
-      }
+      await handleRedownload()
     } catch (err) {
       handleImageLoadError(err)
     }
@@ -127,64 +101,6 @@ const CachedImage: React.FC<CachedImageProps> = (props) => {
   return <>{placeholderContent ?? null}</>
 }
 
-export const CacheManager = {
-  addToCache: async ({ file, key }: { file: string, key: string }) => {
-    const sanitizedKey = CONST.sanitizeCacheKey(key)
-    await new File(file).copy(new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`))
-    return await CacheManager.getCachedUri({ key })
-  },
-
-  getCachedUri: async ({ key }: { key: string }) => {
-    const sanitizedKey = CONST.sanitizeCacheKey(key)
-    return new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`).uri
-  },
-
-  downloadAsync: async ({
-    uri,
-    key,
-    options
-  }: {
-    uri: string
-    key: string
-    options: { headers?: Record<string, string> }
-  }) => {
-    const sanitizedKey = CONST.sanitizeCacheKey(key)
-    const result = await File.downloadFileAsync(
-      uri,
-      new Directory(CONST.IMAGE_CACHE_FOLDER),
-      options
-    )
-    const target = new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`)
-    if (result.uri !== target.uri) {
-      await new File(result.uri).move(target)
-    }
-    return result
-  },
-
-  getMetadata: async ({ key }: { key: string }) => {
-    const sanitizedKey = CONST.sanitizeCacheKey(key)
-    const fileRef = new File(CONST.IMAGE_CACHE_FOLDER, `${sanitizedKey}.png`)
-    const fileURI = fileRef.uri
-
-    try {
-      const metadata = fileRef.info()
-
-      if (!metadata.exists) {
-        return null
-      }
-
-      return {
-        exists: metadata.exists,
-        size: metadata.size ?? 0,
-        modificationTime: new Date(metadata.modificationTime ?? 0),
-        uri: fileURI,
-        isDirectory: false
-      }
-    } catch (err) {
-      console.error('Error getting cache metadata:', err)
-      return null
-    }
-  }
-}
+export { CacheManager }
 
 export default CachedImage

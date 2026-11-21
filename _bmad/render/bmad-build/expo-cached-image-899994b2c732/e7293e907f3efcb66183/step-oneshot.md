@@ -1,0 +1,116 @@
+# Step One-Shot: Implement, Review, Present
+
+You reach this step from step 2, or from step 1 when resuming a plan whose `route` is `oneshot`. `{plan_file}` already exists.
+
+## RULES
+
+- Do not push to a remote unless the user asks.
+- Do not edit anything inside `<frozen-after-approval>` in `{plan_file}`.
+- Review subagents must use the same model level as this session.
+- Start all review subagents in this turn and wait for all of them to finish. Do not run them in the background or end your turn before they return.
+
+## INSTRUCTIONS
+
+### Implement
+
+If intent gaps remain, present each as a numbered question with its options and what each option means, HALT for the human's answers, and fold the answers into the Intent.
+
+Capture `baseline_revision` (current HEAD, or `NO_VCS` if version control is unavailable) into `{plan_file}` frontmatter before making any changes. If `baseline_revision` already holds a value (resumed run), preserve it.
+
+Build the change from `{plan_file}`. The Intent section is what you implement. As you work, add notes to `## Implementation Notes`: decisions you made, files you changed, surprises.
+
+**When to stop.** Stop coding if the request left out something the user would notice in the result. Write the gap in `## Implementation Notes`, then ask the human — do not guess.
+
+### Review
+
+Write `review: 'quick'` and `review_source: 'pinned'` to `{plan_file}` frontmatter.
+
+Read `{baseline_revision}` from `{plan_file}` frontmatter. If it is `NO_VCS`, use best effort to determine what changed. Otherwise use the repository's version-control tooling to write a unified diff of all changes since `{baseline_revision}`, untracked files included, to a uniquely-named file in the system temp directory; set `{diff_file}` to its absolute path. Set `{claims_file}` = `{plan_file}`.
+
+Runtime placeholders: `{diff_file}`, `{claims_file}`, and `{plan_file}` are paths, substituted absolute so a lens can read them; a launch prompt never carries diff text. `{verbatim_intent}` is the `## Intent` section of `{plan_file}` (inside `<frozen-after-approval>`), substituted inline as text. Before launching a lens, expand its skill-root placeholder to this skill's absolute installed directory; never leave that placeholder unresolved in a child prompt.
+
+Say which review lenses you are skipping, then start every active lens before reading any results. Run them at the same time when you can. Fill in runtime placeholders first. When a lens tells you to launch a reviewer subagent, launch it with that prompt text. Do not read the reviewer's instruction file yourself. For any other customized instruction, do what it says:
+
+#### Quick (`quick`)
+
+Launch a context-free subagent with this prompt:
+
+Read `{plan_file}` — the plan holding the acceptance criteria and intent — and the files its frontmatter `context:` lists. Read the agent instruction files (`AGENTS.md`, `CLAUDE.md`, or equivalents) at the repository root and in the directories the diff touches; those are the rules. Then read the unified diff at `{diff_file}` — it is the change under review.
+
+Report unmet acceptance criteria, broken rules, and bugs. Each finding: the location, what goes wrong, and evidence checked against the surrounding code. Output a Markdown list of findings only — no severity, priority, or ranking.
+
+Review by inspection only. Do not modify code, run builds or tests, or invoke quality gates. Do not invoke any skill, and do not spawn subagents of your own — you are the reviewer. Return your findings as text in your final message; do not route them through any findings-reporting tool the host may offer.
+
+If a lens needs subagents and you cannot launch them, write the full prompt for each lens beside `{plan_file}`, named after it with the lens id appended (with placeholders filled in, not just file paths). Stop and ask the user to run each prompt in a separate session and paste back the findings.
+
+Write `lenses_ran` — the ids launched, in launch order — to `{plan_file}` frontmatter.
+
+### Classify
+
+Wait until every review lens has reported. Then judge each finding. Ignore severity labels from reviewers — you decide.
+
+For each finding:
+
+- **Check the claim.** Go to the cited file and line. Does the problem the reviewer describes actually happen? Read surrounding code and callers until you can say yes or no. A nearby issue does not answer this one. Judge whether the bug is real, not whether the suggested fix sounds good. Code that fails loudly on a state you have not shown the program can reach is correct, not a bug.
+
+- **Pick one verdict:**
+  - `high` (intolerable), `medium` (tolerable), or `low` (cosmetic or negligible) — the problem is real. Rate it by harm to users or developers. For developer-only issues, say where it will hurt. Vague complaints like "this is messy" are not `high`/`medium`/`low` — use `false` or `maybe-false`. When unsure how bad, pick the higher grade.
+  - `false` — you checked and the problem does not happen. Say what you found that disproves it.
+  - `maybe-false` — you could not tell. Say what you would need to check. Use this only when the code and diff are not enough to decide.
+
+- Write down every finding with its verdict and evidence. Do not drop any.
+
+Reject `false` findings.
+
+Reject `low` findings when users or developers would rarely hit the problem in normal use and the fix would add more than a simple correction or deletion.
+
+Group what remains by root cause — two findings go together only if the same bug caused both. Same file or same fix is not enough. For each group, keep the worst verdict (`high` > `medium` > `low` > `maybe-false`). If a group has verified `high`, `medium`, or `low` members, route by the worst of those — not `defer` just because one member is `maybe-false`.
+
+For each group:
+
+- **patch** — This change caused or exposed the problem. The smallest fix is simple, adds no new public API, and does not guard code paths you did not show are reachable. Fix it now.
+- **HALT** — Same as patch, but the smallest fix is not that simple. Stop and ask the user before continuing.
+- **defer** — Everything else: old bugs not caused by this change, ideas for later, groups where every member is `maybe-false` and would be `medium` or `high` if true (record that severity marked unverified, and what would prove it; if it would only be `low`, reject it), or fixes that would edit CLAUDE.md, AGENTS.md, rules, or specs. Add one entry to `/Users/dmitry/hacks/wisaw/expo-cached-image/_bmad-output/deferred-work.md`:
+
+  ```markdown
+  - source_plan: `{plan_file}`
+    summary: <one sentence>
+    evidence: <why this is real; for maybe-false, what would prove it>
+  ```
+
+  Do not edit old entries or check for duplicates.
+
+### Finalize Plan
+
+Update `{plan_file}`:
+
+1. Set `status: 'built'` in the frontmatter.
+2. If review found anything, add `## Review Triage Log` with one line per finding: verdict and evidence. For `false`, the disproof. For `maybe-false`, what would settle it. For rejected `low`, why it was not worth fixing.
+
+### Commit
+
+If git is available and there are uncommitted changes, commit with a conventional message based on the Intent. If git is not available, skip.
+
+### Present
+
+
+
+Give the user a short summary — one or two sentences:
+
+- What changed.
+- Review result, including anything deferred.
+- Commit hash, if you made one.
+
+Do not list files, repeat the plan, or walk through what you did unless asked.
+
+Offer next steps in one line: create a PR (push first if needed) when git and a remote exist; use `bmad-walkthrough`; or make another change.
+
+Stop and wait for the user.
+
+Workflow complete.
+
+## On Complete
+
+If anything appears below, do it before exiting. Otherwise exit.
+
+
